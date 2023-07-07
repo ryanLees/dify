@@ -30,6 +30,7 @@ stages:
     #     dockerComposeCommand: 'up --build -d'
         
     - task: DockerCompose@0
+      displayName: Build services
       inputs:
         containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
@@ -38,6 +39,7 @@ stages:
         action: 'Build services'
 
     - task: DockerCompose@0
+      displayName: Push services
       inputs:
         containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
