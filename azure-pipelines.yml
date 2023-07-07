@@ -24,7 +24,7 @@ stages:
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'nexusPocChatbot'
-        dockerComposeFile: '**/dify/docker/docker-compose.yml'
+        dockerComposeFile: '**/docker-compose.yml'
         action: 'Run a Docker Compose command'
         dockerComposeCommand: 'up'
         arguments: '-d'
