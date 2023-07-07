@@ -46,6 +46,13 @@ stages:
         action: 'Push services'
 
 
+    - task: AzureContainerApps@1
+      inputs:
+        azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
+        containerAppName: 'nexus-poc-chatbot'
+        resourceGroup: 'nexus-sbx-chatbot'
+        imageToDeploy: 'nexuspocchatbot.azurecr.io/nexus-poc-chatbot:$(Build.BuildId)'
+
     # - task: AzureContainerApps@1
     #   inputs:
     #     appSourcePath: '$(Build.SourcesDirectory)/docker'
