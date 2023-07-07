@@ -27,3 +27,12 @@ stages:
         dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
         action: 'Run a Docker Compose command'
         dockerComposeCommand: 'up -d'
+    - task: AzureContainerApps@1
+      inputs:
+        appSourcePath: '$(Build.SourcesDirectory)/docker'
+        azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
+        acrName: 'nexusPocChatbot'
+        acrUsername: 'nexusPocChatbot'
+        acrPassword: 'ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN'
+        containerAppName: 'nexus-poc-chatbot'
+        resourceGroup: 'nexus-sbx-chatbot'
