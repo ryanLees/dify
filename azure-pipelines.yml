@@ -34,7 +34,7 @@ stages:
         containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
         azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
-        dockerComposeFile: '**/docker-compose.yml'
+        dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
         action: 'Build services'
 
     - task: DockerCompose@0
