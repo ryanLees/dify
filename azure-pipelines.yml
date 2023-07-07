@@ -20,6 +20,7 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - checkout: self
     - task: DockerCompose@0
       displayName: Build services
       inputs:
@@ -27,7 +28,8 @@ stages:
         azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
         azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
         dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
-        dockerComposeCommand: 'up --build -d'
+        additionalDockerComposeFiles: '$(Build.SourcesDirectory)/docker/docker-compose.middleware.yaml'
+        dockerComposeCommand: 'up --build --no-start'
       
     - task: DockerCompose@0
       displayName: Push services
@@ -36,6 +38,7 @@ stages:
         azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
         azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
         dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
+        additionalDockerComposeFiles: '$(Build.SourcesDirectory)/docker/docker-compose.middleware.yaml'
         action: 'Push services'
 
 
@@ -55,3 +58,4 @@ stages:
     #     acrPassword: 'ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN'
     #     containerAppName: 'nexus-sbx-chatbot'
     #     resourceGroup: 'nexus-sbx-chatbot'
+    
