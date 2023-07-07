@@ -62,5 +62,5 @@ stages:
         acrName: 'nexusPocChatbot'
         acrUsername: 'nexusPocChatbot'
         acrPassword: 'ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN'
-        containerAppName: 'nexus-poc-chatbot'
+        containerAppName: 'nexus-sbx-chatbot'
         resourceGroup: 'nexus-sbx-chatbot'
