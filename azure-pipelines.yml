@@ -46,12 +46,12 @@ stages:
     #     resourceGroup: 'nexus-sbx-chatbot'
     #     imageToDeploy: 'nexuspocchatbot.azurecr.io/nexus-poc-chatbot:$(Build.BuildId)'
 
-    - task: AzureContainerApps@1
-      inputs:
-        appSourcePath: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
-        azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
-        acrName: 'nexusPocChatbot'
-        acrUsername: 'nexusPocChatbot'
-        acrPassword: 'ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN'
-        containerAppName: 'nexus-sbx-chatbot'
-        resourceGroup: 'nexus-sbx-chatbot'
+    # - task: AzureContainerApps@1
+    #   inputs:
+    #     appSourcePath: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
+    #     azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
+    #     acrName: 'nexusPocChatbot'
+    #     acrUsername: 'nexusPocChatbot'
+    #     acrPassword: 'ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN'
+    #     containerAppName: 'nexus-sbx-chatbot'
+    #     resourceGroup: 'nexus-sbx-chatbot'
