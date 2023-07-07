@@ -27,23 +27,24 @@ stages:
     #     containerregistrytype: 'Container Registry'
     #     dockerRegistryEndpoint: 'nexusPocChatbot'
     #     dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
-    #     dockerComposeCommand: 'build'
+    #     dockerComposeCommand: 'up --build -d'
         
-    # - task: DockerCompose@0
-    #   displayName: Push services
-    #   inputs:
-    - task: AzureWebAppContainer@1
+    - task: DockerCompose@0
       inputs:
+        containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
-        appName: 'nexus-poc-chatbot'
-        multicontainerConfigFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
-        containerCommand: 'docker compose up -d'
-    #     action: Push services
-    #     containerregistrytype: 'Container Registry'
-    #     dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
-    #     projectName: $(Build.Repository.Name)
-    #     qualifyImageNames: true
-    #     additionalImageTags: $(Build.BuildId)
+        azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
+        dockerComposeFile: '**/docker-compose.yml'
+        action: 'Build services'
+
+    - task: DockerCompose@0
+      inputs:
+        containerregistrytype: 'Azure Container Registry'
+        azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
+        azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
+        dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
+        action: 'Push services'
+
 
     # - task: AzureContainerApps@1
     #   inputs:
