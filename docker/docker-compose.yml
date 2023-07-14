@@ -2,7 +2,7 @@ version: '3.1'
 services:
   # API service
   api:
-    image: langgenius/dify-api:0.3.7
+    image: nexussbxchatbot.azurecr.io/chatbot/dify-api
     restart: always
     environment:
       # Startup mode, 'api' starts the API server.
@@ -110,7 +110,7 @@ services:
   # worker service
   # The Celery worker for processing the queue.
   worker:
-    image: langgenius/dify-api:0.3.7
+    image: nexussbxchatbot.azurecr.io/chatbot/dify-api
     restart: always
     environment:
       # Startup mode, 'worker' starts the Celery worker for processing the queue.
@@ -156,7 +156,7 @@ services:
 
   # Frontend web application.
   web:
-    image: langgenius/dify-web:0.3.7
+    image: nexussbxchatbot.azurecr.io/chatbot/dify-web
     restart: always
     environment:
       EDITION: SELF_HOSTED
@@ -173,7 +173,7 @@ services:
 
   # The postgres database.
   db:
-    image: postgres:15-alpine
+    image: nexussbxchatbot.azurecr.io/chatbot/postgres
     restart: always
     environment:
       # The password for the default postgres user.
@@ -199,7 +199,7 @@ services:
 
   # The Weaviate vector store.
   weaviate:
-    image: semitechnologies/weaviate:1.18.4
+    image: nexussbxchatbot.azurecr.io/chatbot/weaviate
     restart: always
     volumes:
       # Mount the Weaviate data directory to the container.
@@ -221,7 +221,7 @@ services:
   # The nginx reverse proxy.
   # used for reverse proxying the API service and Web service.
   nginx:
-    image: nginx:latest
+    image: nexussbxchatbot.azurecr.io/chatbot/nginx
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/proxy.conf:/etc/nginx/proxy.conf
