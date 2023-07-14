@@ -21,41 +21,34 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - checkout: self
-    - task: DockerCompose@0
-      displayName: Build services
-      inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
-        azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
-        dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
-        additionalDockerComposeFiles: '$(Build.SourcesDirectory)/docker/docker-compose.middleware.yaml'
-        action: 'Run a Docker Compose command'
-        dockerComposeCommand: 'up --build --no-start'
-    - task: DockerCompose@0
-      displayName: Push services
-      inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
-        azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
-        dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
-        additionalDockerComposeFiles: '$(Build.SourcesDirectory)/docker/docker-compose.middleware.yaml'
-        action: 'Push services'
-
-
-    # - task: AzureContainerApps@1
+    # - task: DockerCompose@0
+    #   displayName: Build services
     #   inputs:
+    #     containerregistrytype: 'Azure Container Registry'
     #     azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
-    #     containerAppName: 'nexus-sbx-chatbot'
-    #     resourceGroup: 'nexus-sbx-chatbot'
-    #     imageToDeploy: 'nexuspocchatbot.azurecr.io/nexus-poc-chatbot:$(Build.BuildId)'
+    #     azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
+    #     dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
+    #     additionalDockerComposeFiles: '$(Build.SourcesDirectory)/docker/docker-compose.middleware.yaml'
+    #     action: 'Run a Docker Compose command'
+    #     dockerComposeCommand: 'up --build --no-start'
 
-    # - task: AzureContainerApps@1
+    # - task: DockerCompose@0
+    #   displayName: Push services
     #   inputs:
-    #     appSourcePath: '$(Build.SourcesDirectory)/docker/docker-compose.yaml'
+    #     containerregistrytype: 'Azure Container Registry'
     #     azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
-    #     acrName: 'nexusPocChatbot'
-    #     acrUsername: 'nexusPocChatbot'
-    #     acrPassword: 'ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN'
-    #     containerAppName: 'nexus-sbx-chatbot'
-    #     resourceGroup: 'nexus-sbx-chatbot'
-    
+    #     azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
+    #     dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yml'
+    #     action: 'Push services'
+
+    - task: AzureContainerApps@1
+      inputs:
+        appSourcePath: '$(Build.SourcesDirectory)/docker'
+        azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
+        acrName: 'nexussbxchatbot'
+        acrUsername: 'nexussbxchatbot'
+        acrPassword: 'f/gmMXOZxkf8DvURypLk0VAZyO7Wbi5yoCRmslKUB0+ACRC5eWhk'
+        containerAppName: 'nexus-sbx-chatbot-containers'
+        resourceGroup: 'nexus-sbx-chatbot'
+        containerAppEnvironment: 'managedEnvironment-nexussbxchatbot-b7f6'
+        yamlConfigPath: '$(Build.SourcesDirectory)/docker/docker-compose.yml'
