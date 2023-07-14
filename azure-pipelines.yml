@@ -48,8 +48,8 @@ stages:
       inputs:
         azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
         appName: 'nexussbxchatbot'
-        appSettings:
-          -DOCKER_REGISTRY_SERVER_USERNAME nexusPocChatbot
-          -DOCKER_REGISTRY_SERVER_URL nexuspocchatbot.azurecr.io
-          -DOCKER_REGISTRY_SERVER_PASSWORD ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN
+        # appSettings:
+        #   -DOCKER_REGISTRY_SERVER_USERNAME nexusPocChatbot
+        #   -DOCKER_REGISTRY_SERVER_URL nexuspocchatbot.azurecr.io
+        #   -DOCKER_REGISTRY_SERVER_PASSWORD ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN
         multicontainerConfigFile: '$(Build.SourcesDirectory)/docker/docker-compose.yml'
