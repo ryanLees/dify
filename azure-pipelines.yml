@@ -41,9 +41,15 @@ stages:
     #     azureContainerRegistry: '{"loginServer":"nexuspocchatbot.azurecr.io", "id" : "/subscriptions/6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5/resourceGroups/nexus-sbx-chatbot/providers/Microsoft.ContainerRegistry/registries/nexusPocChatbot"}'
     #     dockerComposeFile: '$(Build.SourcesDirectory)/docker/docker-compose.yml'
     #     action: 'Push services'
+    #     acrName: 'nexusPocChatbot'
+    #     acrUsername: 'nexusPocChatbot'
+    #     acrPassword: 'ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN'
     - task: AzureWebAppContainer@1
       inputs:
         azureSubscription: 'Hexagon MI Nexus - sbx(6d1a72c8-14d3-4453-b9c0-fc3bbd6c82d5)'
         appName: 'nexussbxchatbot'
-        containers: '$(Build.SourcesDirectory)/docker/docker-compose.yml'
-        containerCommand: 'up -d'
+        appSettings:
+          -DOCKER_REGISTRY_SERVER_USERNAME nexusPocChatbot
+          -DOCKER_REGISTRY_SERVER_URL nexuspocchatbot.azurecr.io
+          -DOCKER_REGISTRY_SERVER_PASSWORD ThHs0At2kekBPhyR8UI4L0e99xamSKLGBntRapFXyJ+ACRCf+JpN
+        multicontainerConfigFile: '$(Build.SourcesDirectory)/docker/docker-compose.yml'
