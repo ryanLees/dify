@@ -99,9 +99,13 @@ services:
       SENTRY_TRACES_SAMPLE_RATE: 1.0
       # The sample rate for Sentry profiles. Default: `1.0`
       SENTRY_PROFILES_SAMPLE_RATE: 1.0
+    depends_on:
+      - db
+      - redis
+      - weaviate
     volumes:
       # Mount the storage directory to the container, for storing user files.
-      - ./volumes/app/storage:/app/api/storage
+      - app-storage:/app/api/storage
 
   # worker service
   # The Celery worker for processing the queue.
@@ -142,9 +146,13 @@ services:
       VECTOR_STORE: weaviate
       WEAVIATE_ENDPOINT: http://weaviate:8080
       WEAVIATE_API_KEY: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
+    depends_on:
+      - db
+      - redis
+      - weaviate
     volumes:
       # Mount the storage directory to the container, for storing user files.
-      - ./volumes/app/storage:/app/api/storage
+      - api-storage:/app/api/storage
 
   # Frontend web application.
   web:
@@ -163,16 +171,113 @@ services:
       # The DSN for Sentry error reporting. If not set, Sentry error reporting will be disabled.
       SENTRY_DSN: ''
 
+  # The postgres database.
+  db:
+    image: nexussbxchatbot.azurecr.io/chatbot/postgres
+    restart: always
+    environment:
+      # The password for the default postgres user.
+      POSTGRES_PASSWORD: difyai123456
+      # The name of the default postgres database.
+      POSTGRES_DB: dify
+      # postgres data directory
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # The redis cache.
+  redis:
+    image: redis:6-alpine
+    restart: always
+    volumes:
+      # Mount the redis data directory to the container.
+      - redis:/data
+    # Set the redis password when startup redis server.
+    command: redis-server --requirepass difyai123456
+
+  # The Weaviate vector store.
+  weaviate:
+    image: nexussbxchatbot.azurecr.io/chatbot/weaviate
+    restart: always
+    volumes:
+      # Mount the Weaviate data directory to the container.
+      - weaviate:/var/lib/weaviate
+    environment:
+      # The Weaviate configurations
+      # You can refer to the [Weaviate](https://weaviate.io/developers/weaviate/config-refs/env-vars) documentation for more information.
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'false'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'none'
+      CLUSTER_HOSTNAME: 'node1'
+      AUTHENTICATION_APIKEY_ENABLED: 'true'
+      AUTHENTICATION_APIKEY_ALLOWED_KEYS: 'WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih'
+      AUTHENTICATION_APIKEY_USERS: 'hello@dify.ai'
+      AUTHORIZATION_ADMINLIST_ENABLED: 'true'
+      AUTHORIZATION_ADMINLIST_USERS: 'hello@dify.ai'
+
   # The nginx reverse proxy.
   # used for reverse proxying the API service and Web service.
   nginx:
     image: nexussbxchatbot.azurecr.io/chatbot/nginx
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - nginx:/etc/nginx/nginx.conf
+      - nginx-proxy:/etc/nginx/proxy.conf
+      - nginx-conf:/etc/nginx/conf.d
     depends_on:
       - api
       - web
     ports:
       - "80:80"
+
+volumes:
+  pgdata:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: pgdata
+  nginx:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: nginx
+  nginx-conf:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: nginx-conf     
+  nginx-proxy:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: nginx-proxy    
+  app-storage:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: app-storage
+  api-storage:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: app-storage
+  weaviate:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: weaviate    
+  redis:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: redis    
