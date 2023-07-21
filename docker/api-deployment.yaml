@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.30.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api
+  name: api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.30.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/docker-default: "true"
+        io.kompose.service: api
+    spec:
+      containers:
+        - env:
+            - name: API_URL
+            - name: APP_URL
+            - name: CELERY_BROKER_URL
+              value: redis://:difyai123456@redis:6379/1
+            - name: CONSOLE_CORS_ALLOW_ORIGINS
+              value: '*'
+            - name: CONSOLE_URL
+            - name: COOKIE_HTTPONLY
+              value: "true"
+            - name: COOKIE_SAMESITE
+              value: Lax
+            - name: COOKIE_SECURE
+              value: "false"
+            - name: DB_DATABASE
+              value: dify
+            - name: DB_HOST
+              value: db
+            - name: DB_PASSWORD
+              value: difyai123456
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_USERNAME
+              value: postgres
+            - name: LOG_LEVEL
+              value: INFO
+            - name: MIGRATION_ENABLED
+              value: "true"
+            - name: MODE
+              value: api
+            - name: QDRANT_API_KEY
+              value: ak-difyai
+            - name: QDRANT_URL
+              value: https://your-qdrant-cluster-url.qdrant.tech/
+            - name: REDIS_DB
+              value: "0"
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PASSWORD
+              value: difyai123456
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_USERNAME
+            - name: REDIS_USE_SSL
+              value: "false"
+            - name: S3_ACCESS_KEY
+              value: ak-difyai
+            - name: S3_BUCKET_NAME
+              value: difyai
+            - name: S3_ENDPOINT
+              value: https://xxx.r2.cloudflarestorage.com
+            - name: S3_REGION
+              value: us-east-1
+            - name: S3_SECRET_KEY
+              value: sk-difyai
+            - name: SECRET_KEY
+              value: sk-9f73s3ljTXVcMT3Blb3ljTqtsKiGHXVcMT3BlbkFJLK7U
+            - name: SENTRY_DSN
+            - name: SENTRY_PROFILES_SAMPLE_RATE
+              value: "1"
+            - name: SENTRY_TRACES_SAMPLE_RATE
+              value: "1"
+            - name: SESSION_REDIS_DB
+              value: "2"
+            - name: SESSION_REDIS_HOST
+              value: redis
+            - name: SESSION_REDIS_PASSWORD
+              value: difyai123456
+            - name: SESSION_REDIS_PORT
+              value: "6379"
+            - name: SESSION_REDIS_USERNAME
+            - name: SESSION_REDIS_USE_SSL
+              value: "false"
+            - name: SESSION_TYPE
+              value: redis
+            - name: STORAGE_LOCAL_PATH
+              value: storage
+            - name: STORAGE_TYPE
+              value: local
+            - name: VECTOR_STORE
+              value: weaviate
+            - name: WEAVIATE_API_KEY
+              value: WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih
+            - name: WEAVIATE_ENDPOINT
+              value: http://weaviate:8080
+            - name: WEB_API_CORS_ALLOW_ORIGINS
+              value: '*'
+          image: nexussbxchatbot.azurecr.io/chatbot/dify-api
+          name: api
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/api/storage
+              name: app-storage
+      restartPolicy: Always
+      volumes:
+        - name: app-storage
+          persistentVolumeClaim:
+            claimName: app-storage
+status: {}
