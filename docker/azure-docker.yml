@@ -105,7 +105,7 @@ services:
       - weaviate
     volumes:
       # Mount the storage directory to the container, for storing user files.
-      - ./volumes/app/storage:/app/api/storage
+      - app-storage:/app/api/storage
 
   # worker service
   # The Celery worker for processing the queue.
@@ -152,7 +152,7 @@ services:
       - weaviate
     volumes:
       # Mount the storage directory to the container, for storing user files.
-      - ./volumes/app/storage:/app/api/storage
+      - api-storage:/app/api/storage
 
   # Frontend web application.
   web:
@@ -173,7 +173,7 @@ services:
 
   # The postgres database.
   db:
-    image: nexussbxchatbot.azurecr.io/chatbot/postgres
+    image: nexussbxchatbot.azurecr.io/chatbot/c
     restart: always
     environment:
       # The password for the default postgres user.
@@ -183,7 +183,7 @@ services:
       # postgres data directory
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ./volumes/db/data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -193,7 +193,7 @@ services:
     restart: always
     volumes:
       # Mount the redis data directory to the container.
-      - ./volumes/redis/data:/data
+      - redis:/data
     # Set the redis password when startup redis server.
     command: redis-server --requirepass difyai123456
 
@@ -203,7 +203,7 @@ services:
     restart: always
     volumes:
       # Mount the Weaviate data directory to the container.
-      - ./volumes/weaviate:/var/lib/weaviate
+      - weaviate:/var/lib/weaviate
     environment:
       # The Weaviate configurations
       # You can refer to the [Weaviate](https://weaviate.io/developers/weaviate/config-refs/env-vars) documentation for more information.
@@ -223,11 +223,61 @@ services:
   nginx:
     image: nexussbxchatbot.azurecr.io/chatbot/nginx
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/proxy.conf:/etc/nginx/proxy.conf
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - nginx:/etc/nginx/nginx.conf
+      - nginx-proxy:/etc/nginx/proxy.conf
+      - nginx-conf:/etc/nginx/conf.d
     depends_on:
       - api
       - web
     ports:
       - "80:80"
+
+volumes:
+  pgdata:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: pgdata
+  nginx:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: nginx
+  nginx-conf:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: nginx-conf     
+  nginx-proxy:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: nginx-proxy    
+  app-storage:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: app-storage
+  api-storage:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: app-storage
+  weaviate:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: weaviate    
+  redis:
+    driver: azure_file
+    driver_opts:
+      storage_account_name: nexussbxchatbotstorage
+      storage_account_key: 7H+6qdTt+1DCoIBcMT+mdx1qQtY4feD1uPXSWLRJkE9tVZ57OLCY8LKQVISGx28buUp7jgvZwZZJ+AStyCxtVg==
+      share_name: redis    
